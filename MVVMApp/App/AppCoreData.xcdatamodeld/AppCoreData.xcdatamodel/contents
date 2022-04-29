@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="19574" systemVersion="20G165" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="MovieEntity" representedClassName="MovieEntity" syncable="YES" codeGenerationType="class">
+        <attribute name="backdrop_path" optional="YES" attributeType="String"/>
+        <attribute name="genre_ids" attributeType="Transformable" customClassName="[Int]"/>
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="overview" optional="YES" attributeType="String"/>
+        <attribute name="poster_path" optional="YES" attributeType="String"/>
+        <attribute name="release_date" optional="YES" attributeType="String"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <attribute name="vote_average" optional="YES" attributeType="Double" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
+    <elements>
+        <element name="MovieEntity" positionX="-535.580322265625" positionY="53.05920410156247" width="128" height="149"/>
+    </elements>
+</model>
