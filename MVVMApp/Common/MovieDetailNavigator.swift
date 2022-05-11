@@ -8,11 +8,11 @@
 import Foundation
 import UIKit
 
-protocol MovieDetailNavigatorType {
+protocol MovieDetailNavigatorProtocol {
     func back()
 }
 
-class MovieDetailNavigator: MovieDetailNavigatorType {
+class MovieDetailNavigator: MovieDetailNavigatorProtocol {
     func back() {
         guard let topVC = UIApplication.topStackViewController() else {
             return

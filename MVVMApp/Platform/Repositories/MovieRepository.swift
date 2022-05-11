@@ -11,13 +11,10 @@ import CoreData
 
 protocol MovieRepositoryProtocol {
     func loadList(input: MovieListInput) -> Observable<MovieListOutput>
-    
+    func loadDetail(input: MovieDetailInput) -> Observable<MovieDetailOutput>
     func fetchFavorite() -> Observable<[Movie]>
-    
     func isFavorite(_ movie: Movie) -> Bool
-    
     func addFavorite(_ movie: Movie)
-    
     func deleteFavorite(_ movie: Movie)
 }
 

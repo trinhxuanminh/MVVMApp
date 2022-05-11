@@ -12,8 +12,6 @@ import RxCocoa
 
 class MovieDetailViewController: BaseViewController {
     
-    private var disposeBag = DisposeBag()
-    
     private lazy var backButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -84,7 +82,8 @@ class MovieDetailViewController: BaseViewController {
         return label
     }()
     
-    private var viewModel: MovieDetailViewModel! {
+    private var disposeBag: DisposeBag!
+    private var viewModel: MovieDetailViewModelProtocol! {
         didSet {
             self.binding()
         }
@@ -184,10 +183,11 @@ extension MovieDetailViewController: BaseSetupView {
         self.backButton.rx.action = self.viewModel.backAction
     }
     
-    func setViewModel(_ viewModel: MovieDetailViewModel?) {
-        guard let viewModel = viewModel else {
-            return
-        }
+    func setDisposeBag(_ disposeBag: DisposeBag) {
+        self.disposeBag = disposeBag
+    }
+    
+    func setViewModel(_ viewModel: MovieDetailViewModelProtocol) {
         self.viewModel = viewModel
     }
 }

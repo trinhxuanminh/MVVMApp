@@ -11,11 +11,21 @@ import Differentiator
 import Action
 import SDWebImage
 
-class MovieDetailViewModel {
+protocol MovieDetailViewModelProtocol {
+    var backAction: Action<Void, Void>! { get }
     
-    private let disposeBag = DisposeBag()
-    private let useCase = MovieDetailUseCase()
-    private let navigator = MovieDetailNavigator()
+    var backdrop: BehaviorSubject<UIImage?> { get }
+    var poster: BehaviorSubject<UIImage?> { get }
+    var name: BehaviorSubject<String?> { get }
+    var date: BehaviorSubject<String?> { get }
+    var runtime: BehaviorSubject<String?> { get }
+}
+
+class MovieDetailViewModel: MovieDetailViewModelProtocol {
+    
+    private let disposeBag: DisposeBag
+    private let useCase: MovieDetailUseCaseProtocol
+    private let navigator: MovieDetailNavigatorProtocol
     
     // MARK: - Input
     private(set) var backAction: Action<Void, Void>!
@@ -28,7 +38,10 @@ class MovieDetailViewModel {
     
     private(set) var movieDetail = BehaviorSubject<MovieDetail?>(value: nil)
     
-    init(movie: Movie) {
+    init(movie: Movie, disposeBag: DisposeBag, useCase: MovieDetailUseCaseProtocol, navigator: MovieDetailNavigatorProtocol) {
+        self.disposeBag = disposeBag
+        self.useCase = useCase
+        self.navigator = navigator
         self.binding()
         self.loadMovieDetail(movie: movie)
     }

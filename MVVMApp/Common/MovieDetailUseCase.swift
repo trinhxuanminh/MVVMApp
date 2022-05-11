@@ -8,13 +8,17 @@
 import Foundation
 import RxSwift
 
-protocol MovieDetailUseCaseType {
+protocol MovieDetailUseCaseProtocol {
     func loadMovieDetail(_ movie: Movie) -> Observable<MovieDetail>
 }
 
-class MovieDetailUseCase: MovieDetailUseCaseType {
+class MovieDetailUseCase: MovieDetailUseCaseProtocol {
     
-    private var movieRepository = MovieRepository()
+    private let movieRepository: MovieRepositoryProtocol
+    
+    init(movieRepository: MovieRepositoryProtocol) {
+        self.movieRepository = movieRepository
+    }
     
     func loadMovieDetail(_ movie: Movie) -> Observable<MovieDetail> {
         return self.movieRepository.loadDetail(input: .getDetail(id: movie.id!, page: 1)).map { movieDetailOutput in

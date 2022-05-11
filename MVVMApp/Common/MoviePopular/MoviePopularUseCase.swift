@@ -7,18 +7,23 @@
 
 import Foundation
 import RxSwift
+import SwinjectStoryboard
 
-protocol MoviePopularUseCaseType {
-    func loadMoviePopular() -> Observable<[MovieViewModel]>
+protocol MoviePopularUseCaseProtocol {
+    func loadMoviePopular() -> Observable<[MovieViewModelProtocol]>
 }
 
-class MoviePopularUseCase: MoviePopularUseCaseType {
+class MoviePopularUseCase: MoviePopularUseCaseProtocol {
     
-    private let movieRepository = MovieRepository()
     private var page: Int = 0
     private var totalPage: Int?
+    private let movieRepository: MovieRepositoryProtocol
     
-    func loadMoviePopular() -> Observable<[MovieViewModel]> {
+    init(movieRepository: MovieRepositoryProtocol) {
+        self.movieRepository = movieRepository
+    }
+    
+    func loadMoviePopular() -> Observable<[MovieViewModelProtocol]> {
         if self.totalPage != nil && self.page >= self.totalPage! {
             return Observable.never()
         }
@@ -27,7 +32,10 @@ class MoviePopularUseCase: MoviePopularUseCaseType {
             .map { movieListOutput in
                 self.totalPage = movieListOutput.total_pages
                 return movieListOutput.movies.map { movie in
-                    return MovieViewModel(movie: movie)
+                    return MovieViewModel(movie: movie,
+                                          disposeBag: SwinjectStoryboard.defaultContainer.resolve(DisposeBag.self)!,
+                                          useCase: SwinjectStoryboard.defaultContainer.resolve(MovieUseCaseProtocol.self)!,
+                                          navigator: SwinjectStoryboard.defaultContainer.resolve(MovieNavigatorProtocol.self)!)
                 }
             }
     }

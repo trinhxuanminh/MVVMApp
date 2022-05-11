@@ -10,17 +10,25 @@ import RxSwift
 import RxCocoa
 import Action
 
-class ShowFavoriteViewModel {
+protocol ShowFavoriteViewModelProtocol {
+    var disposeBag: DisposeBag { get }
     
-    let disposeBag = DisposeBag()
-    private let navigator = ShowFavoriteNavigator()
+    var viewMoreAction: Action<Void, Void>! { get }
+}
+
+class ShowFavoriteViewModel: ShowFavoriteViewModelProtocol {
+    
+    let disposeBag: DisposeBag
+    private let navigator: ShowFavoriteNavigatorProtocol
     
     // MARK: - Input
     private(set) var viewMoreAction: Action<Void, Void>!
     // MARK: - Output
     
     
-    init() {
+    init(disposeBag: DisposeBag, navigator: ShowFavoriteNavigatorProtocol) {
+        self.disposeBag = disposeBag
+        self.navigator = navigator
         self.binding()
     }
     

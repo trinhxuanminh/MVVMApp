@@ -34,14 +34,17 @@ class MoviePopularCollectionViewCell: UICollectionViewCell {
         return collectionView
     }()
     
-    private let viewModel = MoviePopularViewModel()
+    private var viewModel: MoviePopularViewModelProtocol! {
+        didSet {
+            self.binding()
+            self.viewModel.loadMoviePopularAction.execute(())
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.createComponents()
         self.setupConstraints()
-        self.binding()
-        self.viewModel.loadMoviePopularAction.execute(())
     }
     
     required init?(coder: NSCoder) {
@@ -98,7 +101,7 @@ extension MoviePopularCollectionViewCell: BaseSetupView {
         
         let dataSource = RxCollectionViewSectionedReloadDataSource<CustomSectionModel> { dataSource, collectionView, indexPath, item in
             let cell = collectionView.dequeueCell(ofType: MoviePopularItemCollectionViewCell.self, indexPath: indexPath)
-            cell.setViewModel(item as? MovieViewModel)
+            cell.setViewModel(item as! MovieViewModelProtocol)
             return cell
         } configureSupplementaryView: { dataSource, collectionView, kind, indexPath in
             let reusableview = collectionView.dequeueCell(ofType: LoadMoreCollectionReusableView.self, ofKind: .footer, indexPath: indexPath)
@@ -111,6 +114,10 @@ extension MoviePopularCollectionViewCell: BaseSetupView {
         self.moviePopularCollectionView.rx.itemSelected.subscribe(onNext: { indexPath in
             self.viewModel.selectMoviePopularAction.execute(indexPath)
         }).disposed(by: self.viewModel.disposeBag)
+    }
+    
+    func setViewModel(_ viewModel: MoviePopularViewModelProtocol) {
+        self.viewModel = viewModel
     }
 }
 

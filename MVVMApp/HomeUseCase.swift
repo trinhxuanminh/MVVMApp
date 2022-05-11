@@ -7,19 +7,27 @@
 
 import Foundation
 import RxSwift
+import SwinjectStoryboard
 
-protocol HomeUseCaseType {
-    func loadMovieNowPlaying() -> Observable<[MovieViewModel]>
+protocol HomeUseCaseProtocol {
+    func loadMovieNowPlaying() -> Observable<[MovieViewModelProtocol]>
 }
 
-class HomeUseCase: HomeUseCaseType {
+class HomeUseCase: HomeUseCaseProtocol {
     
-    private let movieRepository = MovieRepository()
+    private let movieRepository: MovieRepositoryProtocol
     
-    func loadMovieNowPlaying() -> Observable<[MovieViewModel]> {
+    init(movieRepository: MovieRepositoryProtocol) {
+        self.movieRepository = movieRepository
+    }
+    
+    func loadMovieNowPlaying() -> Observable<[MovieViewModelProtocol]> {
         return self.movieRepository.loadList(input: .getNowPlaying(page: 1)).map { movieListOutput in
             return movieListOutput.movies.map { movie in
-                return MovieViewModel(movie: movie)
+                return MovieViewModel(movie: movie,
+                                      disposeBag: SwinjectStoryboard.defaultContainer.resolve(DisposeBag.self)!,
+                                      useCase: SwinjectStoryboard.defaultContainer.resolve(MovieUseCaseProtocol.self)!,
+                                      navigator: SwinjectStoryboard.defaultContainer.resolve(MovieNavigatorProtocol.self)!)
             }
         }
     }

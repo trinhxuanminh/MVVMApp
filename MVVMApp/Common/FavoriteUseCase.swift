@@ -7,19 +7,27 @@
 
 import Foundation
 import RxSwift
+import SwinjectStoryboard
 
-protocol FavoriteUseCaseType {
-    func fetchFavorite() -> Observable<[MovieViewModel]>
+protocol FavoriteUseCaseProtocol {
+    func fetchFavorite() -> Observable<[MovieViewModelProtocol]>
 }
 
-class FavoriteUseCase: FavoriteUseCaseType {
+class FavoriteUseCase: FavoriteUseCaseProtocol {
     
-    private let movieRepository = MovieRepository()
+    private let movieRepository: MovieRepositoryProtocol
     
-    func fetchFavorite() -> Observable<[MovieViewModel]> {
+    init(movieRepository: MovieRepositoryProtocol) {
+        self.movieRepository = movieRepository
+    }
+    
+    func fetchFavorite() -> Observable<[MovieViewModelProtocol]> {
         return self.movieRepository.fetchFavorite().map { movies in
             return movies.reversed().map { movie in
-                return MovieViewModel(movie: movie)
+                return MovieViewModel(movie: movie,
+                                      disposeBag: SwinjectStoryboard.defaultContainer.resolve(DisposeBag.self)!,
+                                      useCase: SwinjectStoryboard.defaultContainer.resolve(MovieUseCaseProtocol.self)!,
+                                      navigator: SwinjectStoryboard.defaultContainer.resolve(MovieNavigatorProtocol.self)!)
             }
         }
     }

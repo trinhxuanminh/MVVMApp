@@ -50,18 +50,22 @@ class ShowFavoriteCollectionViewCell: UICollectionViewCell {
         return image
     }()
     
+    
+    private var viewModel: ShowFavoriteViewModelProtocol! {
+        didSet {
+            self.binding()
+        }
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.createComponents()
         self.setupConstraints()
-        self.binding()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-    private let viewModel = ShowFavoriteViewModel()
     
     override func draw(_ rect: CGRect) {
         let gradientLayer = CAGradientLayer()
@@ -113,5 +117,9 @@ extension ShowFavoriteCollectionViewCell: BaseSetupView {
     
     func binding() {
         self.viewMoreButton.rx.action = self.viewModel.viewMoreAction
+    }
+    
+    func setViewModel(_ viewModel: ShowFavoriteViewModelProtocol) {
+        self.viewModel = viewModel
     }
 }

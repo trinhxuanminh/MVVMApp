@@ -9,10 +9,9 @@ import UIKit
 import RxSwift
 import RxCocoa
 import RxDataSources
+import SwinjectStoryboard
 
 class HomeViewController: BaseViewController {
-    
-    private var disposeBag = DisposeBag()
     
     private lazy var homeCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -29,8 +28,9 @@ class HomeViewController: BaseViewController {
         return collectionView
     }()
     
-    private let viewModel = HomeViewModel()
-
+    private var disposeBag: DisposeBag!
+    private var viewModel: HomeViewModelProtocol!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -112,9 +112,11 @@ extension HomeViewController: BaseSetupView {
                 switch indexPath.item {
                 case 0:
                     let cell = collectionView.dequeueCell(ofType: MoviePopularCollectionViewCell.self, indexPath: indexPath)
+                    cell.setViewModel(SwinjectStoryboard.defaultContainer.resolve(MoviePopularViewModelProtocol.self)!)
                     return cell
                 case 1:
                     let cell = collectionView.dequeueCell(ofType: ShowFavoriteCollectionViewCell.self, indexPath: indexPath)
+                    cell.setViewModel(SwinjectStoryboard.defaultContainer.resolve(ShowFavoriteViewModelProtocol.self)!)
                     return cell
                 default:
                     let cell = collectionView.dequeueCell(ofType: TitleCollectionViewCell.self, indexPath: indexPath)
@@ -123,7 +125,7 @@ extension HomeViewController: BaseSetupView {
                 }
             default:
                 let cell = collectionView.dequeueCell(ofType: MovieItemType1CollectionViewCell.self, indexPath: indexPath)
-                cell.setViewModel(item as? MovieViewModel)
+                cell.setViewModel(item as! MovieViewModelProtocol)
                 cell.setupUI(mode: .movieNowPlaying)
                 return cell
             }
@@ -138,5 +140,13 @@ extension HomeViewController: BaseSetupView {
             }
             self.viewModel.selectMovieNowPlayingAction.execute(indexPath)
         }).disposed(by: self.disposeBag)
+    }
+    
+    func setDisposeBag(_ disposeBag: DisposeBag) {
+        self.disposeBag = disposeBag
+    }
+    
+    func setViewModel(_ viewModel: HomeViewModelProtocol) {
+        self.viewModel = viewModel
     }
 }

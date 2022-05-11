@@ -83,7 +83,7 @@ class MovieItemType1CollectionViewCell: UICollectionViewCell {
         return view
     }()
     
-    private var viewModel: MovieViewModel! {
+    private var viewModel: MovieViewModelProtocol! {
         didSet {
             self.binding()
         }
@@ -186,14 +186,11 @@ extension MovieItemType1CollectionViewCell: BaseSetupView {
         self.viewModel.favoriteState.bind(to: self.setFavoriteButton.rx.image()).disposed(by: self.viewModel.disposeBag)
     }
     
-    func setViewModel(_ viewModel: MovieViewModel?) {
-        guard let viewModel = viewModel else {
-            return
-        }
+    func setViewModel(_ viewModel: MovieViewModelProtocol) {
         self.viewModel = viewModel
     }
     
-    func getViewModel() -> MovieViewModel {
+    func getViewModel() -> MovieViewModelProtocol {
         return self.viewModel
     }
     

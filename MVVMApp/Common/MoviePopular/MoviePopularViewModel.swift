@@ -12,21 +12,33 @@ import Differentiator
 import Action
 import Alamofire
 
-class MoviePopularViewModel {
+protocol MoviePopularViewModelProtocol {
+    var disposeBag: DisposeBag { get }
     
-    let disposeBag = DisposeBag()
-    private let useCase = MoviePopularUseCase()
-    private let navigator = MoviePopularNavigator()
+    var loadMoviePopularAction: Action<Void, [MovieViewModelProtocol]>! { get }
+    var selectMoviePopularAction: Action<IndexPath, Void>! { get }
+    
+    var sections: BehaviorSubject<[CustomSectionModel]> { get }
+}
+
+class MoviePopularViewModel: MoviePopularViewModelProtocol {
+    
+    let disposeBag: DisposeBag
+    private let useCase: MoviePopularUseCaseProtocol
+    private let navigator: MoviePopularNavigatorProtocol
     
     // MARK: - Input
-    private(set) var loadMoviePopularAction: Action<Void, [MovieViewModel]>!
+    private(set) var loadMoviePopularAction: Action<Void, [MovieViewModelProtocol]>!
     private(set) var selectMoviePopularAction: Action<IndexPath, Void>!
     // MARK: - Output
     
     
     private(set) var sections = BehaviorSubject<[CustomSectionModel]>(value: [])
     
-    init() {
+    init(disposeBag: DisposeBag, useCase: MoviePopularUseCaseProtocol, navigator: MoviePopularNavigatorProtocol) {
+        self.disposeBag = disposeBag
+        self.useCase = useCase
+        self.navigator = navigator
         self.binding()
     }
     

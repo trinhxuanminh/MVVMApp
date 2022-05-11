@@ -11,11 +11,26 @@ import RxCocoa
 import SDWebImage
 import Action
 
-class MovieViewModel {
+protocol MovieViewModelProtocol {
+    var disposeBag: DisposeBag { get }
     
-    let disposeBag = DisposeBag()
-    private let useCase = MovieUseCase()
-    private let navigator = MovieNavigator()
+    var deleteFavoriteAction: Action<Void, Void>! { get }
+    var setFavoriteAction: Action<Void, Void>! { get }
+    
+    var poster: BehaviorSubject<UIImage?> { get }
+    var name: BehaviorSubject<String?> { get }
+    var date: BehaviorSubject<String?> { get }
+    var vote: BehaviorSubject<String?> { get }
+    var favoriteState: BehaviorSubject<UIImage?> { get }
+    
+    var movie: BehaviorSubject<Movie?> { get }
+}
+
+class MovieViewModel: MovieViewModelProtocol {
+    
+    let disposeBag: DisposeBag
+    private let useCase: MovieUseCaseProtocol
+    private let navigator: MovieNavigatorProtocol
     
     // MARK: - Input
     private(set) var deleteFavoriteAction: Action<Void, Void>!
@@ -29,7 +44,10 @@ class MovieViewModel {
     
     private(set) var movie = BehaviorSubject<Movie?>(value: nil)
     
-    init(movie: Movie) {
+    init(movie: Movie, disposeBag: DisposeBag, useCase: MovieUseCaseProtocol, navigator: MovieNavigatorProtocol) {
+        self.disposeBag = disposeBag
+        self.useCase = useCase
+        self.navigator = navigator
         self.binding()
         self.movie.onNext(movie)
         self.favoriteState.onNext(AppIcon.image(icon: self.useCase.isFavorite(movie) ? .selectFavorite : .deselectFavorite))

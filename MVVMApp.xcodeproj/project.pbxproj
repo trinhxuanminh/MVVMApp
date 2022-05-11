@@ -35,6 +35,9 @@
 		966817B3280EC7FB00EB55D4 /* Movie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966817B2280EC7FB00EB55D4 /* Movie.swift */; };
 		966817B7280ECD1F00EB55D4 /* MovieListType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966817B6280ECD1F00EB55D4 /* MovieListType.swift */; };
 		966817B9280ECD2B00EB55D4 /* MovieRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 966817B8280ECD2B00EB55D4 /* MovieRepository.swift */; };
+		9668D718282B64C300BE1932 /* Swinject in Frameworks */ = {isa = PBXBuildFile; productRef = 9668D717282B64C300BE1932 /* Swinject */; };
+		9668D71A282B660F00BE1932 /* Swinject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9668D719282B660F00BE1932 /* Swinject.swift */; };
+		9668D721282B6D4000BE1932 /* SwinjectStoryboard in Frameworks */ = {isa = PBXBuildFile; productRef = 9668D720282B6D4000BE1932 /* SwinjectStoryboard */; };
 		96A77E22280F1505009AB551 /* DateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A77E20280F1505009AB551 /* DateExtension.swift */; };
 		96A77E23280F1505009AB551 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96A77E21280F1505009AB551 /* StringExtension.swift */; };
 		96A77E42280F2A9D009AB551 /* OpenSans-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 96A77E3F280F2A9D009AB551 /* OpenSans-SemiBold.ttf */; };
@@ -75,6 +78,19 @@
 		96FECFD72814730F006F86F4 /* UICollectionViewCellExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96FECFD62814730E006F86F4 /* UICollectionViewCellExtension.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		9668D71E282B665B00BE1932 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		17FC2EB3D64C6F0B568D77C7 /* Pods_MVVMApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MVVMApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		44C09913ADF4E481F1F79A00 /* Pods-MVVMApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MVVMApp.debug.xcconfig"; path = "Target Support Files/Pods-MVVMApp/Pods-MVVMApp.debug.xcconfig"; sourceTree = "<group>"; };
@@ -105,6 +121,7 @@
 		966817B2280EC7FB00EB55D4 /* Movie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Movie.swift; sourceTree = "<group>"; };
 		966817B6280ECD1F00EB55D4 /* MovieListType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieListType.swift; sourceTree = "<group>"; };
 		966817B8280ECD2B00EB55D4 /* MovieRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovieRepository.swift; sourceTree = "<group>"; };
+		9668D719282B660F00BE1932 /* Swinject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Swinject.swift; sourceTree = "<group>"; };
 		96A77E20280F1505009AB551 /* DateExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateExtension.swift; sourceTree = "<group>"; };
 		96A77E21280F1505009AB551 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		96A77E3F280F2A9D009AB551 /* OpenSans-SemiBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-SemiBold.ttf"; sourceTree = "<group>"; };
@@ -154,6 +171,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				5ED1C9CB844246A68E396F78 /* Pods_MVVMApp.framework in Frameworks */,
+				9668D721282B6D4000BE1932 /* SwinjectStoryboard in Frameworks */,
+				9668D718282B64C300BE1932 /* Swinject in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -380,6 +399,7 @@
 			children = (
 				96CB4A67280D3D9200634B05 /* AppDelegate.swift */,
 				96CB4A69280D3D9200634B05 /* SceneDelegate.swift */,
+				9668D719282B660F00BE1932 /* Swinject.swift */,
 				96CB4A70280D3D9500634B05 /* Assets.xcassets */,
 				966817A1280EC1D600EB55D4 /* Main.storyboard */,
 				96CE50B22811BDAC007C5614 /* AppCoreData.xcdatamodeld */,
@@ -484,12 +504,17 @@
 				96CB4A61280D3D9200634B05 /* Frameworks */,
 				96CB4A62280D3D9200634B05 /* Resources */,
 				14613ED852CF89C680AFE2DA /* [CP] Embed Pods Frameworks */,
+				9668D71E282B665B00BE1932 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = MVVMApp;
+			packageProductDependencies = (
+				9668D717282B64C300BE1932 /* Swinject */,
+				9668D720282B6D4000BE1932 /* SwinjectStoryboard */,
+			);
 			productName = MVVMApp;
 			productReference = 96CB4A64280D3D9200634B05 /* MVVMApp.app */;
 			productType = "com.apple.product-type.application";
@@ -518,6 +543,10 @@
 				Base,
 			);
 			mainGroup = 96CB4A5B280D3D9200634B05;
+			packageReferences = (
+				9668D716282B64C300BE1932 /* XCRemoteSwiftPackageReference "Swinject" */,
+				9668D71F282B6D4000BE1932 /* XCRemoteSwiftPackageReference "SwinjectStoryboard" */,
+			);
 			productRefGroup = 96CB4A65280D3D9200634B05 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -612,6 +641,7 @@
 				96CB4A8F280D6CD400634B05 /* APIOutputBase.swift in Sources */,
 				963B427F280F02580060CC0B /* AppColor.swift in Sources */,
 				963B425D280EF8EA0060CC0B /* MovieViewModel.swift in Sources */,
+				9668D71A282B660F00BE1932 /* Swinject.swift in Sources */,
 				96CB4A68280D3D9200634B05 /* AppDelegate.swift in Sources */,
 				96CE50AD2811893A007C5614 /* FavoriteViewController.swift in Sources */,
 				96C905BF2813EF9F00C913E7 /* MoviePopularNavigator.swift in Sources */,
@@ -859,6 +889,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9668D716282B64C300BE1932 /* XCRemoteSwiftPackageReference "Swinject" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Swinject/Swinject.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+		9668D71F282B6D4000BE1932 /* XCRemoteSwiftPackageReference "SwinjectStoryboard" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Swinject/SwinjectStoryboard.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9668D717282B64C300BE1932 /* Swinject */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9668D716282B64C300BE1932 /* XCRemoteSwiftPackageReference "Swinject" */;
+			productName = Swinject;
+		};
+		9668D720282B6D4000BE1932 /* SwinjectStoryboard */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9668D71F282B6D4000BE1932 /* XCRemoteSwiftPackageReference "SwinjectStoryboard" */;
+			productName = SwinjectStoryboard;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		96CE50B22811BDAC007C5614 /* AppCoreData.xcdatamodeld */ = {

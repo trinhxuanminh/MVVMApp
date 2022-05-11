@@ -8,11 +8,11 @@
 import Foundation
 import UIKit
 
-protocol MovieNavigatorType {
+protocol MovieNavigatorProtocol {
     func toMovieDetail()
 }
 
-class MovieNavigator: MovieNavigatorType {
+class MovieNavigator: MovieNavigatorProtocol {
     func toMovieDetail() {
         
     }

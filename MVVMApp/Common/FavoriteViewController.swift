@@ -12,8 +12,6 @@ import RxDataSources
 
 class FavoriteViewController: BaseViewController {
     
-    private let disposeBag = DisposeBag()
-    
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -35,7 +33,8 @@ class FavoriteViewController: BaseViewController {
         return collectionView
     }()
     
-    private let viewModel = FavoriteViewModel()
+    private var disposeBag: DisposeBag!
+    private var viewModel: FavoriteViewModelProtocol!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,7 +52,6 @@ class FavoriteViewController: BaseViewController {
     override func viewWillAppear(_ animated: Bool) {
         self.view.backgroundColor = UIColor(rgb: 0xFFFFFF)
     }
-    
     
     deinit {
         print("deinit")
@@ -105,7 +103,7 @@ extension FavoriteViewController: BaseSetupView {
 
         let dataSource = RxCollectionViewSectionedReloadDataSource<CustomSectionModel> { [weak self] dataSource, collectionView, indexPath, item in
             let cell = collectionView.dequeueCell(ofType: MovieItemType1CollectionViewCell.self, indexPath: indexPath)
-            cell.setViewModel(item as? MovieViewModel)
+            cell.setViewModel(item as! MovieViewModelProtocol)
             cell.setupUI(mode: .favorite)
             cell.setDeleteButtonDisposable {
                 guard let self = self else {
@@ -126,5 +124,13 @@ extension FavoriteViewController: BaseSetupView {
             }
             self.viewModel.selectMovieFavoriteAction.execute(indexPath)
         }).disposed(by: self.disposeBag)
+    }
+    
+    func setDisposeBag(_ disposeBag: DisposeBag) {
+        self.disposeBag = disposeBag
+    }
+    
+    func setViewModel(_ viewModel: FavoriteViewModelProtocol) {
+        self.viewModel = viewModel
     }
 }

@@ -11,22 +11,33 @@ import RxCocoa
 import Differentiator
 import Action
 
-class FavoriteViewModel {
+protocol FavoriteViewModelProtocol {
+    var loadMovieFavoriteAction: Action<Void, [MovieViewModelProtocol]>! { get }
+    var selectMovieFavoriteAction: Action<IndexPath, Void>! { get }
+    var deleteMovieFavoriteAction: Action<MovieViewModelProtocol, Void>! { get }
     
-    private let disposeBag = DisposeBag()
-    private let useCase = FavoriteUseCase()
-    private let navigator = FavoriteNavigator()
+    var sections: BehaviorSubject<[CustomSectionModel]> { get }
+}
+
+class FavoriteViewModel: FavoriteViewModelProtocol {
+    
+    private let disposeBag: DisposeBag
+    private let useCase: FavoriteUseCaseProtocol
+    private let navigator: FavoriteNavigatorProtocol
     
     // MARK: - Input
-    private(set) var loadMovieFavoriteAction: Action<Void, [MovieViewModel]>!
+    private(set) var loadMovieFavoriteAction: Action<Void, [MovieViewModelProtocol]>!
     private(set) var selectMovieFavoriteAction: Action<IndexPath, Void>!
-    private(set) var deleteMovieFavoriteAction: Action<MovieViewModel, Void>!
+    private(set) var deleteMovieFavoriteAction: Action<MovieViewModelProtocol, Void>!
     // MARK: - Output
     
     
     private(set) var sections = BehaviorSubject<[CustomSectionModel]>(value: [])
     
-    init() {
+    init(disposeBag: DisposeBag, useCase: FavoriteUseCaseProtocol, navigator: FavoriteNavigatorProtocol) {
+        self.disposeBag = disposeBag
+        self.useCase = useCase
+        self.navigator = navigator
         self.binding()
     }
     

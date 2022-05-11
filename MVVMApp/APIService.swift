@@ -18,7 +18,12 @@ enum APIError: Error {
     case error(responseCode: Int, data: Any)
 }
 
-class APIService {
+protocol APIServiceProtocol {
+    func request<T: Mappable>(_ input: APIInputBase) -> Observable<T>
+    func requestArray<T: Mappable>(_ input: APIInputBase) -> Observable<[T]>
+}
+
+class APIService: APIServiceProtocol {
     
     private func _request(_ input: APIInputBase) -> Observable<Any> {
         let manager = Alamofire.Session.default

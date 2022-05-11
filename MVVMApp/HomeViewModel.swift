@@ -11,21 +11,31 @@ import RxCocoa
 import Differentiator
 import Action
 
-class HomeViewModel {
+protocol HomeViewModelProtocol {
+    var loadMovieNowPlayingAction: Action<Void, [MovieViewModelProtocol]>! { get }
+    var selectMovieNowPlayingAction: Action<IndexPath, Void>! { get }
     
-    private let disposeBag = DisposeBag()
-    private let useCase = HomeUseCase()
-    private let navigator = HomeNavigator()
+    var sections: BehaviorSubject<[CustomSectionModel]> { get }
+}
+
+class HomeViewModel: HomeViewModelProtocol {
+    
+    private let disposeBag: DisposeBag
+    private let useCase: HomeUseCaseProtocol
+    private let navigator: HomeNavigatorProtocol
     
     // MARK: - Input
-    private(set) var loadMovieNowPlayingAction: Action<Void, [MovieViewModel]>!
+    private(set) var loadMovieNowPlayingAction: Action<Void, [MovieViewModelProtocol]>!
     private(set) var selectMovieNowPlayingAction: Action<IndexPath, Void>!
     // MARK: - Output
     
     
     private(set) var sections = BehaviorSubject<[CustomSectionModel]>(value: [])
     
-    init() {
+    init(disposeBag: DisposeBag, useCase: HomeUseCaseProtocol, navigator: HomeNavigatorProtocol) {
+        self.disposeBag = disposeBag
+        self.useCase = useCase
+        self.navigator = navigator
         self.binding()
     }
     

@@ -8,17 +8,19 @@
 import Foundation
 import RxSwift
 
-protocol MovieUseCaseType {
+protocol MovieUseCaseProtocol {
     func isFavorite(_ movie: Movie) -> Bool
-    
     func deleteFavorite(_ movie: Movie)
-    
     func setFavorite(_ movie: Movie) -> Bool
 }
 
-class MovieUseCase: MovieUseCaseType {
+class MovieUseCase: MovieUseCaseProtocol {
     
-    private let movieRepository = MovieRepository()
+    private let movieRepository: MovieRepositoryProtocol
+    
+    init(movieRepository: MovieRepositoryProtocol) {
+        self.movieRepository = movieRepository
+    }
     
     func isFavorite(_ movie: Movie) -> Bool {
         return self.movieRepository.isFavorite(movie)
