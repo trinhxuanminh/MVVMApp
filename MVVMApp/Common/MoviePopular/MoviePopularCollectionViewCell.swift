@@ -9,12 +9,12 @@ import UIKit
 import RxSwift
 import RxCocoa
 import RxDataSources
+import SnapKit
 
 class MoviePopularCollectionViewCell: UICollectionViewCell {
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor(rgb: 0x1F1F1F)
         label.text = "Popular Today"
         label.font = AppFont.getFont(fontName: .openSans_Bold, size: 22)
@@ -25,7 +25,6 @@ class MoviePopularCollectionViewCell: UICollectionViewCell {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.bounces = false
         collectionView.backgroundColor = .clear
@@ -81,19 +80,17 @@ extension MoviePopularCollectionViewCell: BaseSetupView {
     }
     
     func setupConstraints() {
-        NSLayoutConstraint.activate([
-            self.titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: AppSize.Spacing.inset.rawValue),
-            self.titleLabel.heightAnchor.constraint(equalToConstant: 30),
-            self.titleLabel.widthAnchor.constraint(equalToConstant: 162)
-        ])
+        self.titleLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview()
+            make.leading.equalToSuperview().offset(AppSize.Spacing.inset.rawValue)
+            make.height.equalTo(30)
+            make.width.equalTo(162)
+        }
         
-        NSLayoutConstraint.activate([
-            self.moviePopularCollectionView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 16),
-            self.moviePopularCollectionView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-            self.moviePopularCollectionView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-            self.moviePopularCollectionView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
-        ])
+        self.moviePopularCollectionView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(self.titleLabel.snp.bottom).offset(16)
+        }
     }
     
     func binding() {

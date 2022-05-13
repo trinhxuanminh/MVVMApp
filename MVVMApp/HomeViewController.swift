@@ -9,7 +9,8 @@ import UIKit
 import RxSwift
 import RxCocoa
 import RxDataSources
-import SwinjectStoryboard
+import Swinject
+import SnapKit
 
 class HomeViewController: BaseViewController {
     
@@ -17,7 +18,6 @@ class HomeViewController: BaseViewController {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.showsVerticalScrollIndicator = false
         collectionView.bounces = false
         collectionView.backgroundColor = .clear
@@ -95,12 +95,10 @@ extension HomeViewController: BaseSetupView {
     }
     
     func setupConstraints() {
-        NSLayoutConstraint.activate([
-            self.homeCollectionView.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor),
-            self.homeCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.homeCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.homeCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
-        ])
+        self.homeCollectionView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
+        }
     }
     
     func binding() {
@@ -112,11 +110,11 @@ extension HomeViewController: BaseSetupView {
                 switch indexPath.item {
                 case 0:
                     let cell = collectionView.dequeueCell(ofType: MoviePopularCollectionViewCell.self, indexPath: indexPath)
-                    cell.setViewModel(SwinjectStoryboard.defaultContainer.resolve(MoviePopularViewModelProtocol.self)!)
+                    cell.setViewModel(Assembler.resolve(MoviePopularViewModelProtocol.self))
                     return cell
                 case 1:
                     let cell = collectionView.dequeueCell(ofType: ShowFavoriteCollectionViewCell.self, indexPath: indexPath)
-                    cell.setViewModel(SwinjectStoryboard.defaultContainer.resolve(ShowFavoriteViewModelProtocol.self)!)
+                    cell.setViewModel(Assembler.resolve(ShowFavoriteViewModelProtocol.self))
                     return cell
                 default:
                     let cell = collectionView.dequeueCell(ofType: TitleCollectionViewCell.self, indexPath: indexPath)

@@ -9,12 +9,13 @@ import UIKit
 import RxSwift
 import RxCocoa
 import RxDataSources
+import Swinject
+import SnapKit
 
 class FavoriteViewController: BaseViewController {
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor(rgb: 0x1F1F1F)
         label.text = "Favorite"
         label.font = AppFont.getFont(fontName: .openSans_Bold, size: 22)
@@ -25,7 +26,6 @@ class FavoriteViewController: BaseViewController {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.showsVerticalScrollIndicator = false
         collectionView.bounces = false
         collectionView.backgroundColor = .clear
@@ -83,27 +83,30 @@ extension FavoriteViewController: BaseSetupView {
     }
     
     func setupConstraints() {
-        NSLayoutConstraint.activate([
-            self.titleLabel.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 16),
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 16),
-            self.titleLabel.widthAnchor.constraint(equalToConstant: 162),
-            self.titleLabel.heightAnchor.constraint(equalToConstant: 30)
-        ])
+        self.titleLabel.snp.makeConstraints { make in
+            make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(16)
+            make.leading.equalToSuperview().offset(16)
+            make.width.equalTo(162)
+            make.height.equalTo(30)
+        }
         
-        NSLayoutConstraint.activate([
-            self.favoriteCollectionView.topAnchor.constraint(equalTo: self.titleLabel.bottomAnchor, constant: 16),
-            self.favoriteCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.favoriteCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.favoriteCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
-        ])
+        self.favoriteCollectionView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(self.titleLabel.snp.bottom).offset(16)
+        }
     }
     
     func binding() {
         self.favoriteCollectionView.rx.setDelegate(self).disposed(by: self.disposeBag)
 
-        let dataSource = RxCollectionViewSectionedReloadDataSource<CustomSectionModel> { [weak self] dataSource, collectionView, indexPath, item in
+        let dataSource = RxCollectionViewSectionedAnimatedDataSource<MovieSectionAnimated> { [weak self] dataSource, collectionView, indexPath, item in
             let cell = collectionView.dequeueCell(ofType: MovieItemType1CollectionViewCell.self, indexPath: indexPath)
-            cell.setViewModel(item as! MovieViewModelProtocol)
+            if let movie = item.movie {
+                cell.setViewModel(MovieViewModel(movie: movie,
+                                                 disposeBag: Assembler.resolve(DisposeBag.self),
+                                                 useCase: Assembler.resolve(MovieUseCaseProtocol.self),
+                                                 navigator: Assembler.resolve(MovieNavigatorProtocol.self)))
+            }
             cell.setupUI(mode: .favorite)
             cell.setDeleteButtonDisposable {
                 guard let self = self else {

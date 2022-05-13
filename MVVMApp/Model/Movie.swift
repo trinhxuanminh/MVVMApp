@@ -7,7 +7,7 @@
 
 import ObjectMapper
 
-struct Movie: BaseModel {
+struct Movie: BaseModel, Equatable {
     var backdrop_path: String?
     var genre_ids: [Int] = []
     var id: Int?

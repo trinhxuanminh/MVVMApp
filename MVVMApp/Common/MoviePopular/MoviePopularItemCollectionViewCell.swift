@@ -8,12 +8,12 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import SnapKit
 
 class MoviePopularItemCollectionViewCell: UICollectionViewCell {
     
     lazy var posterImageView: UIImageView = {
         let image = UIImageView()
-        image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleToFill
         image.layer.cornerRadius = AppSize.Radius.medium.rawValue
         image.clipsToBounds = true
@@ -22,13 +22,11 @@ class MoviePopularItemCollectionViewCell: UICollectionViewCell {
     
     lazy var setFavoriteButton: UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor(rgb: 0x1F1F1F)
         label.font = AppFont.getFont(fontName: .openSans_SemiBold, size: 15)
         return label
@@ -36,7 +34,6 @@ class MoviePopularItemCollectionViewCell: UICollectionViewCell {
     
     lazy var dateLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor(rgb: 0x727272)
         label.font = AppFont.getFont(fontName: .openSans_Regular, size: 13)
         return label
@@ -44,7 +41,6 @@ class MoviePopularItemCollectionViewCell: UICollectionViewCell {
     
     lazy var starImageView: UIImageView = {
         let image = UIImageView()
-        image.translatesAutoresizingMaskIntoConstraints = false
         image.image = AppIcon.image(icon: .star)
         image.contentMode = .scaleAspectFit
         return image
@@ -76,33 +72,26 @@ extension MoviePopularItemCollectionViewCell: BaseSetupView {
     }
     
     func setupConstraints() {
-        NSLayoutConstraint.activate([
-            self.posterImageView.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            self.posterImageView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-            self.posterImageView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-            self.posterImageView.bottomAnchor.constraint(equalTo: self.nameLabel.topAnchor, constant: -8)
-        ])
+        self.posterImageView.snp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+            make.bottom.equalTo(self.nameLabel.snp.top).offset(-8)
+        }
         
-        NSLayoutConstraint.activate([
-            self.setFavoriteButton.topAnchor.constraint(equalTo: self.posterImageView.topAnchor, constant: 5),
-            self.setFavoriteButton.leadingAnchor.constraint(equalTo: self.posterImageView.leadingAnchor, constant: 5),
-            self.setFavoriteButton.heightAnchor.constraint(equalToConstant: 32),
-            self.setFavoriteButton.widthAnchor.constraint(equalToConstant: 32)
-        ])
+        self.setFavoriteButton.snp.makeConstraints { make in
+            make.width.height.equalTo(32)
+            make.top.leading.equalTo(self.posterImageView).offset(5)
+        }
         
-        NSLayoutConstraint.activate([
-            self.nameLabel.heightAnchor.constraint(equalToConstant: 17),
-            self.nameLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-            self.nameLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-            self.nameLabel.bottomAnchor.constraint(equalTo: self.dateLabel.topAnchor, constant: -5)
-        ])
+        self.nameLabel.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.height.equalTo(17)
+            make.bottom.equalTo(self.dateLabel.snp.top).offset(-5)
+        }
         
-        NSLayoutConstraint.activate([
-            self.dateLabel.heightAnchor.constraint(equalToConstant: 17),
-            self.dateLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor),
-            self.dateLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor),
-            self.dateLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
-        ])
+        self.dateLabel.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.height.equalTo(17)
+        }
     }
     
     func binding() {

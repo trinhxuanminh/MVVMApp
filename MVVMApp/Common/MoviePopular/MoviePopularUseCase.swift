@@ -7,7 +7,7 @@
 
 import Foundation
 import RxSwift
-import SwinjectStoryboard
+import Swinject
 
 protocol MoviePopularUseCaseProtocol {
     func loadMoviePopular() -> Observable<[MovieViewModelProtocol]>
@@ -33,9 +33,9 @@ class MoviePopularUseCase: MoviePopularUseCaseProtocol {
                 self.totalPage = movieListOutput.total_pages
                 return movieListOutput.movies.map { movie in
                     return MovieViewModel(movie: movie,
-                                          disposeBag: SwinjectStoryboard.defaultContainer.resolve(DisposeBag.self)!,
-                                          useCase: SwinjectStoryboard.defaultContainer.resolve(MovieUseCaseProtocol.self)!,
-                                          navigator: SwinjectStoryboard.defaultContainer.resolve(MovieNavigatorProtocol.self)!)
+                                          disposeBag: Assembler.resolve(DisposeBag.self),
+                                          useCase: Assembler.resolve(MovieUseCaseProtocol.self),
+                                          navigator: Assembler.resolve(MovieNavigatorProtocol.self))
                 }
             }
     }

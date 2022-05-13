@@ -8,6 +8,7 @@
 import RxSwift
 import RxCocoa
 import CoreData
+import RealmSwift
 
 protocol MovieRepositoryProtocol {
     func loadList(input: MovieListInput) -> Observable<MovieListOutput>
@@ -35,105 +36,52 @@ class MovieRepository: APIService, MovieRepositoryProtocol {
     }
     
     func fetchFavorite() -> Observable<[Movie]> {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return Observable.just([])
-        }
-        let managedContext = appDelegate.persistentContainer.viewContext
-        
-        let request = MovieEntity.fetchRequest()
-
-        do {
-            let listMovieEntity = try managedContext.fetch(request)
-            let movies = listMovieEntity.map { movieEntity -> Movie in
-                return self.convert_Entity_To_Movie(movieEntity)
-            }
-            return Observable.just(movies)
-        } catch let error as NSError {
-            print("Could not save. \(error), \(error.userInfo)")
-        }
-        return Observable.just([])
+        let listObject = RealmService.shared.fetch(ofType: MovieObject.self)
+        return Observable.just(listObject.map { movieObject -> Movie in
+            return self.convert_Object_To_Movie(movieObject)
+        })
     }
 
     func isFavorite(_ movie: Movie) -> Bool {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+        guard let id = movie.id else {
             return false
         }
-        let managedContext = appDelegate.persistentContainer.viewContext
-        
-        let request = MovieEntity.fetchRequest()
-        
-        do {
-            let listMovieEntity = try managedContext.fetch(request)
-            return listMovieEntity.firstIndex(where: {
-                let id = $0.id
-                return id == movie.id!
-            }) != nil
-        } catch let error as NSError {
-            print("Could not save. \(error), \(error.userInfo)")
-        }
-        return false
+        return RealmService.shared.getById(ofType: MovieObject.self, id: id) != nil
     }
 
     func addFavorite(_ movie: Movie) {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
-            return
-        }
-        let managedContext = appDelegate.persistentContainer.viewContext
-        
-        managedContext.insert(self.convert_Movie_To_Entity(movie, context: managedContext))
-        do {
-            try managedContext.save()
-        } catch let error as NSError {
-            print("Could not save. \(error), \(error.userInfo)")
-        }
+        RealmService.shared.add(self.convert_Movie_To_Object(movie))
     }
 
     func deleteFavorite(_ movie: Movie) {
-        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else {
+        guard let id = movie.id, let movieObject = RealmService.shared.getById(ofType: MovieObject.self, id: id) else {
             return
         }
-        let managedContext = appDelegate.persistentContainer.viewContext
-        
-        let request = MovieEntity.fetchRequest()
-        
-        do {
-            let listMovieEntity = try managedContext.fetch(request)
-            let movieEntity = listMovieEntity.first { movieEntity in
-                return movieEntity.id == Int64(movie.id!)
-            }
-            guard let movieEntity = movieEntity else {
-                return
-            }
-            managedContext.delete(movieEntity)
-            try managedContext.save()
-        } catch let error as NSError {
-            print("Could not save. \(error), \(error.userInfo)")
-        }
+        RealmService.shared.delete(movieObject)
     }
     
-    private func convert_Movie_To_Entity(_ movie: Movie, context: NSManagedObjectContext) -> MovieEntity {
-        let movieEntity = MovieEntity(context: context)
-        
-        movieEntity.backdrop_path = movie.backdrop_path
-        movieEntity.id = Int64(movie.id ?? 0)
-        movieEntity.overview = movie.overview
-        movieEntity.poster_path = movie.poster_path
-        movieEntity.release_date = movie.release_date
-        movieEntity.title = movie.title
-        movieEntity.vote_average = movie.vote_average ?? 0
-        movieEntity.genre_ids = movie.genre_ids
-        return movieEntity
+    private func convert_Movie_To_Object(_ movie: Movie) -> MovieObject {
+        let movieObject = MovieObject()
+        movieObject.id = movie.id ?? 0
+        movieObject.backdrop_path = movie.backdrop_path
+        movieObject.overview = movie.overview
+        movieObject.poster_path = movie.poster_path
+        movieObject.release_date = movie.release_date
+        movieObject.title = movie.title
+        movieObject.vote_average = movie.vote_average ?? 0.0
+        movieObject.genre_ids = movie.genre_ids
+        return movieObject
     }
     
-    private func convert_Entity_To_Movie(_ entity: MovieEntity) -> Movie {
-        let json: [String: Any] = ["backdrop_path": entity.backdrop_path as Any,
-                                   "id": entity.id,
-                                   "overview": entity.overview as Any,
-                                   "poster_path": entity.poster_path as Any,
-                                   "release_date": entity.release_date as Any,
-                                   "title": entity.title as Any,
-                                   "vote_average": entity.vote_average,
-                                   "genre_ids": (entity.genre_ids ?? []) as [Int]
+    private func convert_Object_To_Movie(_ object: MovieObject) -> Movie {
+        let json: [String: Any] = ["backdrop_path": object.backdrop_path as Any,
+                                   "id": object.id,
+                                   "overview": object.overview as Any,
+                                   "poster_path": object.poster_path as Any,
+                                   "release_date": object.release_date as Any,
+                                   "title": object.title as Any,
+                                   "vote_average": object.vote_average,
+                                   "genre_ids": object.genre_ids
         ]
         return Movie(JSON: json)!
     }

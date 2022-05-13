@@ -7,8 +7,8 @@
 
 import Foundation
 import UIKit
-import SwinjectStoryboard
 import RxSwift
+import Swinject
 
 protocol FavoriteNavigatorProtocol {
     func toMovieDetail(_ movieViewModel: MovieViewModelProtocol)
@@ -19,12 +19,12 @@ class FavoriteNavigator: FavoriteNavigatorProtocol {
         guard let topVC = UIApplication.topStackViewController(), let movie = try? movieViewModel.movie.value() else {
             return
         }
-        let movieDetailVC = SwinjectStoryboard.defaultContainer.resolve(MovieDetailViewController.self)!
-        movieDetailVC.setDisposeBag(SwinjectStoryboard.defaultContainer.resolve(DisposeBag.self)!)
+        let movieDetailVC = Assembler.resolve(MovieDetailViewController.self)
+        movieDetailVC.setDisposeBag(Assembler.resolve(DisposeBag.self))
         movieDetailVC.setViewModel(MovieDetailViewModel(movie: movie,
-                                                        disposeBag: SwinjectStoryboard.defaultContainer.resolve(DisposeBag.self)!,
-                                                        useCase: SwinjectStoryboard.defaultContainer.resolve(MovieDetailUseCaseProtocol.self)!,
-                                                        navigator: SwinjectStoryboard.defaultContainer.resolve(MovieDetailNavigatorProtocol.self)!))
+                                                        disposeBag: Assembler.resolve(DisposeBag.self),
+                                                        useCase: Assembler.resolve(MovieDetailUseCaseProtocol.self),
+                                                        navigator: Assembler.resolve(MovieDetailNavigatorProtocol.self)))
         topVC.push(to: movieDetailVC, animated: true)
     }
 }

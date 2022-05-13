@@ -7,6 +7,7 @@
 
 import Foundation
 import UIKit
+import SnapKit
 
 class TitleCollectionViewCell: UICollectionViewCell {
     
@@ -16,7 +17,6 @@ class TitleCollectionViewCell: UICollectionViewCell {
     
     lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor(rgb: 0x1F1F1F)
         label.font = AppFont.getFont(fontName: .openSans_Bold, size: 22)
         return label
@@ -39,12 +39,10 @@ extension TitleCollectionViewCell: BaseSetupView {
     }
     
     func setupConstraints() {
-        NSLayoutConstraint.activate([
-            self.titleLabel.topAnchor.constraint(equalTo: self.contentView.topAnchor),
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: AppSize.Spacing.inset.rawValue),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -AppSize.Spacing.inset.rawValue),
-            self.titleLabel.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
-        ])
+        self.titleLabel.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview()
+            make.trailing.leading.equalToSuperview().inset(AppSize.Spacing.inset.rawValue)
+        }
     }
     
     func binding() {

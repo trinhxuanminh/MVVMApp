@@ -7,12 +7,12 @@
 
 import Foundation
 import UIKit
+import SnapKit
 
 class ShowFavoriteCollectionViewCell: UICollectionViewCell {
     
     private lazy var gradientView: UIView = {
         let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = AppSize.Radius.medium.rawValue
         view.clipsToBounds = true
         return view
@@ -20,7 +20,6 @@ class ShowFavoriteCollectionViewCell: UICollectionViewCell {
     
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.font = AppFont.getFont(fontName: .openSans_Bold, size: 18)
         label.numberOfLines = 2
         label.textColor = UIColor(rgb: 0xFFFFFF)
@@ -33,7 +32,6 @@ class ShowFavoriteCollectionViewCell: UICollectionViewCell {
     
     private lazy var viewMoreButton: UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("View More", for: .normal)
         button.setTitleColor(UIColor(rgb: 0xFFFFFF), for: .normal)
         button.backgroundColor = UIColor(rgb: 0xFA7001)
@@ -44,7 +42,6 @@ class ShowFavoriteCollectionViewCell: UICollectionViewCell {
     
     private lazy var illustrationImageView: UIImageView = {
         let image = UIImageView()
-        image.translatesAutoresizingMaskIntoConstraints = false
         image.image = AppIcon.image(icon: .illustration)
         image.contentMode = .scaleAspectFit
         return image
@@ -86,33 +83,29 @@ extension ShowFavoriteCollectionViewCell: BaseSetupView {
     }
     
     func setupConstraints() {
-        NSLayoutConstraint.activate([
-            self.gradientView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 12),
-            self.gradientView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: 16),
-            self.gradientView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -16),
-            self.gradientView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -32)
-        ])
+        self.gradientView.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(16)
+            make.top.equalToSuperview().offset(12)
+            make.bottom.equalToSuperview().inset(32)
+        }
         
-        NSLayoutConstraint.activate([
-            self.titleLabel.topAnchor.constraint(equalTo: self.gradientView.topAnchor, constant: 16),
-            self.titleLabel.leadingAnchor.constraint(equalTo: self.gradientView.leadingAnchor, constant: 16),
-            self.titleLabel.trailingAnchor.constraint(equalTo: self.illustrationImageView.leadingAnchor, constant: -6),
-            self.titleLabel.heightAnchor.constraint(equalToConstant: 50)
-        ])
+        self.titleLabel.snp.makeConstraints { make in
+            make.top.leading.equalTo(self.gradientView).offset(16)
+            make.trailing.equalTo(self.illustrationImageView.snp.leading).inset(6)
+            make.height.equalTo(50)
+        }
         
-        NSLayoutConstraint.activate([
-            self.viewMoreButton.heightAnchor.constraint(equalToConstant: 32),
-            self.viewMoreButton.leadingAnchor.constraint(equalTo: self.gradientView.leadingAnchor, constant: 16),
-            self.viewMoreButton.widthAnchor.constraint(equalToConstant: 102),
-            self.viewMoreButton.bottomAnchor.constraint(equalTo: self.gradientView.bottomAnchor, constant: -16)
-        ])
+        self.viewMoreButton.snp.makeConstraints { make in
+            make.leading.bottom.equalTo(self.gradientView).inset(16)
+            make.height.equalTo(32)
+            make.width.equalTo(102)
+        }
         
-        NSLayoutConstraint.activate([
-            self.illustrationImageView.heightAnchor.constraint(equalToConstant: 119),
-            self.illustrationImageView.trailingAnchor.constraint(equalTo: self.gradientView.trailingAnchor, constant: -16),
-            self.illustrationImageView.widthAnchor.constraint(equalToConstant: 153),
-            self.illustrationImageView.bottomAnchor.constraint(equalTo: self.gradientView.bottomAnchor, constant: -16)
-        ])
+        self.illustrationImageView.snp.makeConstraints { make in
+            make.trailing.bottom.equalTo(self.gradientView).inset(16)
+            make.height.equalTo(119)
+            make.width.equalTo(153)
+        }
     }
     
     func binding() {

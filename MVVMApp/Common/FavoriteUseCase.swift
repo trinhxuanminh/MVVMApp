@@ -7,10 +7,9 @@
 
 import Foundation
 import RxSwift
-import SwinjectStoryboard
 
 protocol FavoriteUseCaseProtocol {
-    func fetchFavorite() -> Observable<[MovieViewModelProtocol]>
+    func fetchFavorite() -> Observable<[MovieAnimated]>
 }
 
 class FavoriteUseCase: FavoriteUseCaseProtocol {
@@ -21,13 +20,10 @@ class FavoriteUseCase: FavoriteUseCaseProtocol {
         self.movieRepository = movieRepository
     }
     
-    func fetchFavorite() -> Observable<[MovieViewModelProtocol]> {
+    func fetchFavorite() -> Observable<[MovieAnimated]> {
         return self.movieRepository.fetchFavorite().map { movies in
             return movies.reversed().map { movie in
-                return MovieViewModel(movie: movie,
-                                      disposeBag: SwinjectStoryboard.defaultContainer.resolve(DisposeBag.self)!,
-                                      useCase: SwinjectStoryboard.defaultContainer.resolve(MovieUseCaseProtocol.self)!,
-                                      navigator: SwinjectStoryboard.defaultContainer.resolve(MovieNavigatorProtocol.self)!)
+                return MovieAnimated(movie: movie)
             }
         }
     }

@@ -9,19 +9,18 @@ import Foundation
 import UIKit
 import RxSwift
 import RxCocoa
+import SnapKit
 
 class MovieDetailViewController: BaseViewController {
     
     private lazy var backButton: UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(AppIcon.image(icon: .back), for: .normal)
         return button
     }()
     
     private lazy var backdropImageView: UIImageView = {
         let image = UIImageView()
-        image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleToFill
         image.clipsToBounds = true
         return image
@@ -29,7 +28,6 @@ class MovieDetailViewController: BaseViewController {
     
     private lazy var posterImageView: UIImageView = {
         let image = UIImageView()
-        image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleToFill
         image.clipsToBounds = true
         image.layer.cornerRadius = AppSize.Radius.medium.rawValue
@@ -38,7 +36,6 @@ class MovieDetailViewController: BaseViewController {
     
     private lazy var shadowView: UIView = {
         let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor(rgb: 0xFFFFFF)
         view.layer.shadowColor = UIColor(rgb: 0x000000).cgColor
         view.layer.shadowOpacity = 0.3
@@ -50,7 +47,6 @@ class MovieDetailViewController: BaseViewController {
     
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor(rgb: 0x1F1F1F)
         label.numberOfLines = 2
         label.font = AppFont.getFont(fontName: .openSans_SemiBold, size: 22)
@@ -59,7 +55,6 @@ class MovieDetailViewController: BaseViewController {
     
     private lazy var dateImageView: UIImageView = {
         let image = UIImageView()
-        image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleAspectFit
         image.image = AppIcon.image(icon: .date)
         image.clipsToBounds = true
@@ -68,7 +63,6 @@ class MovieDetailViewController: BaseViewController {
     
     private lazy var dateLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor(rgb: 0x727272)
         label.font = AppFont.getFont(fontName: .openSans_Regular, size: 14)
         return label
@@ -76,7 +70,6 @@ class MovieDetailViewController: BaseViewController {
     
     private lazy var runtimeLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor(rgb: 0x727272)
         label.font = AppFont.getFont(fontName: .openSans_Bold, size: 13)
         return label
@@ -117,61 +110,54 @@ extension MovieDetailViewController: BaseSetupView {
     }
     
     func setupConstraints() {
-        NSLayoutConstraint.activate([
-            self.backdropImageView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            self.backdropImageView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            self.backdropImageView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            self.backdropImageView.heightAnchor.constraint(equalTo: self.backdropImageView.widthAnchor, multiplier: 9/16)
-        ])
+        self.backdropImageView.snp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+            make.height.equalTo(self.backdropImageView.snp.width).multipliedBy(9.0/16.0)
+        }
         
-        NSLayoutConstraint.activate([
-            self.backButton.topAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            self.backButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: AppSize.Spacing.inset.rawValue),
-            self.backButton.widthAnchor.constraint(equalToConstant: 24),
-            self.backButton.heightAnchor.constraint(equalToConstant: 24)
-        ])
-        
-        NSLayoutConstraint.activate([
-            self.posterImageView.topAnchor.constraint(equalTo: self.backdropImageView.bottomAnchor, constant: -42),
-            self.posterImageView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: AppSize.Spacing.inset.rawValue),
-            self.posterImageView.widthAnchor.constraint(equalToConstant: 119),
-            self.posterImageView.heightAnchor.constraint(equalTo: self.posterImageView.widthAnchor, multiplier: 3/2)
-        ])
-        
-        NSLayoutConstraint.activate([
-            self.shadowView.topAnchor.constraint(equalTo: self.posterImageView.topAnchor, constant: 1),
-            self.shadowView.leadingAnchor.constraint(equalTo: self.posterImageView.leadingAnchor, constant: 1),
-            self.shadowView.trailingAnchor.constraint(equalTo: self.posterImageView.trailingAnchor, constant: -1),
-            self.shadowView.bottomAnchor.constraint(equalTo: self.posterImageView.bottomAnchor, constant: -1)
-        ])
-        
-        NSLayoutConstraint.activate([
-            self.nameLabel.topAnchor.constraint(equalTo: self.backdropImageView.bottomAnchor, constant: 20),
-            self.nameLabel.leadingAnchor.constraint(equalTo: self.posterImageView.trailingAnchor, constant: 16),
-            self.nameLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
-            self.nameLabel.heightAnchor.constraint(greaterThanOrEqualToConstant: 30)
-        ])
-        
-        NSLayoutConstraint.activate([
-            self.dateImageView.topAnchor.constraint(equalTo: self.nameLabel.bottomAnchor, constant: 6),
-            self.dateImageView.leadingAnchor.constraint(equalTo: self.posterImageView.trailingAnchor, constant: 16),
-            self.dateImageView.widthAnchor.constraint(equalToConstant: 20),
-            self.dateImageView.heightAnchor.constraint(equalToConstant: 20)
-        ])
-        
-        NSLayoutConstraint.activate([
-            self.dateLabel.centerYAnchor.constraint(equalTo: self.dateImageView.centerYAnchor),
-            self.dateLabel.leadingAnchor.constraint(equalTo: self.dateImageView.trailingAnchor, constant: 5),
-            self.dateLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
-            self.dateLabel.heightAnchor.constraint(equalToConstant: 21)
-        ])
-        
-        NSLayoutConstraint.activate([
-            self.runtimeLabel.topAnchor.constraint(equalTo: self.dateLabel.bottomAnchor, constant: 6),
-            self.runtimeLabel.leadingAnchor.constraint(equalTo: self.posterImageView.trailingAnchor, constant: 16),
-            self.runtimeLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -16),
-            self.runtimeLabel.heightAnchor.constraint(equalToConstant: 17)
-        ])
+        self.backButton.snp.makeConstraints { make in
+            make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(10)
+            make.leading.equalToSuperview().offset(AppSize.Spacing.inset.rawValue)
+            make.width.height.equalTo(24)
+        }
+
+        self.posterImageView.snp.makeConstraints { make in
+            make.top.equalTo(self.backdropImageView.snp.bottom).inset(42)
+            make.leading.equalToSuperview().offset(AppSize.Spacing.inset.rawValue)
+            make.width.equalTo(119)
+            make.height.equalTo(self.posterImageView.snp.width).multipliedBy(3.0/2.0)
+        }
+
+        self.shadowView.snp.makeConstraints { make in
+            make.edges.equalTo(self.posterImageView.snp.edges).inset(1)
+        }
+
+        self.nameLabel.snp.makeConstraints { make in
+            make.top.equalTo(self.backdropImageView.snp.bottom).offset(20)
+            make.leading.equalTo(self.posterImageView.snp.trailing).offset(16)
+            make.trailing.equalToSuperview().inset(16)
+            make.height.greaterThanOrEqualTo(30)
+        }
+
+        self.dateImageView.snp.makeConstraints { make in
+            make.top.equalTo(self.nameLabel.snp.bottom).offset(6)
+            make.leading.equalTo(self.posterImageView.snp.trailing).offset(16)
+            make.width.height.equalTo(20)
+        }
+
+        self.dateLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(self.dateImageView.snp.centerY)
+            make.leading.equalTo(self.dateImageView.snp.trailing).offset(5)
+            make.trailing.equalToSuperview().inset(16)
+            make.height.equalTo(21)
+        }
+
+        self.runtimeLabel.snp.makeConstraints { make in
+            make.top.equalTo(self.dateLabel.snp.bottom).offset(6)
+            make.leading.equalTo(self.posterImageView.snp.trailing).offset(16)
+            make.trailing.equalToSuperview().inset(16)
+            make.height.equalTo(17)
+        }
     }
     
     func binding() {

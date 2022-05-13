@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import SwinjectStoryboard
+import Swinject
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         self.window = window
         let nav = UINavigationController()
         nav.setNavigationBarHidden(true, animated: false)
-        let vc = SwinjectStoryboard.defaultContainer.resolve(HomeViewController.self)!
+        let vc = Assembler.resolve(HomeViewController.self)
         nav.viewControllers = [vc]
         window.rootViewController = nav
         window.makeKeyAndVisible()

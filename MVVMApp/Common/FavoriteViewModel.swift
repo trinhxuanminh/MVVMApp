@@ -12,11 +12,11 @@ import Differentiator
 import Action
 
 protocol FavoriteViewModelProtocol {
-    var loadMovieFavoriteAction: Action<Void, [MovieViewModelProtocol]>! { get }
+    var loadMovieFavoriteAction: Action<Void, [MovieAnimated]>! { get }
     var selectMovieFavoriteAction: Action<IndexPath, Void>! { get }
     var deleteMovieFavoriteAction: Action<MovieViewModelProtocol, Void>! { get }
     
-    var sections: BehaviorSubject<[CustomSectionModel]> { get }
+    var sections: BehaviorSubject<[MovieSectionAnimated]> { get }
 }
 
 class FavoriteViewModel: FavoriteViewModelProtocol {
@@ -26,13 +26,13 @@ class FavoriteViewModel: FavoriteViewModelProtocol {
     private let navigator: FavoriteNavigatorProtocol
     
     // MARK: - Input
-    private(set) var loadMovieFavoriteAction: Action<Void, [MovieViewModelProtocol]>!
+    private(set) var loadMovieFavoriteAction: Action<Void, [MovieAnimated]>!
     private(set) var selectMovieFavoriteAction: Action<IndexPath, Void>!
     private(set) var deleteMovieFavoriteAction: Action<MovieViewModelProtocol, Void>!
     // MARK: - Output
     
     
-    private(set) var sections = BehaviorSubject<[CustomSectionModel]>(value: [])
+    private(set) var sections = BehaviorSubject<[MovieSectionAnimated]>(value: [])
     
     init(disposeBag: DisposeBag, useCase: FavoriteUseCaseProtocol, navigator: FavoriteNavigatorProtocol) {
         self.disposeBag = disposeBag
@@ -59,7 +59,7 @@ class FavoriteViewModel: FavoriteViewModelProtocol {
                 guard let self = self else {
                     return
                 }
-                let section0 = CustomSectionModel(items: output)
+                let section0 = MovieSectionAnimated(items: output)
                 self.sections.onNext([section0])
             })
             .disposed(by: disposeBag)
@@ -86,9 +86,9 @@ class FavoriteViewModel: FavoriteViewModelProtocol {
                 return Observable.never()
             }
             var section0 = sections[0]
-            var listMovieViewModel = section0.items as! [MovieViewModel]
-            let indexDelete = listMovieViewModel.firstIndex { movieViewModel in
-                guard let movie = try? movieViewModel.movie.value() else {
+            var listMovieAnimated = section0.items
+            let indexDelete = listMovieAnimated.firstIndex { movieAnimated in
+                guard let movie = movieAnimated.movie else {
                     return false
                 }
                 return movie.id == movieDelete.id
@@ -96,8 +96,8 @@ class FavoriteViewModel: FavoriteViewModelProtocol {
             guard let indexDelete = indexDelete else {
                 return Observable.never()
             }
-            listMovieViewModel.remove(at: indexDelete)
-            section0.items = listMovieViewModel
+            listMovieAnimated.remove(at: indexDelete)
+            section0.items = listMovieAnimated
             self.sections.onNext([section0])
             return Observable.empty()
         }

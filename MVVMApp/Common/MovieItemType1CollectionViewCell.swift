@@ -8,6 +8,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import SnapKit
 
 class MovieItemType1CollectionViewCell: UICollectionViewCell {
     
@@ -18,7 +19,6 @@ class MovieItemType1CollectionViewCell: UICollectionViewCell {
     
     private lazy var posterImageView: UIImageView = {
         let image = UIImageView()
-        image.translatesAutoresizingMaskIntoConstraints = false
         image.contentMode = .scaleToFill
         image.layer.cornerRadius = AppSize.Radius.medium.rawValue
         image.clipsToBounds = true
@@ -27,7 +27,6 @@ class MovieItemType1CollectionViewCell: UICollectionViewCell {
     
     private lazy var nameLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor(rgb: 0x1F1F1F)
         label.numberOfLines = 2
         label.font = AppFont.getFont(fontName: .openSans_SemiBold, size: 15)
@@ -36,7 +35,6 @@ class MovieItemType1CollectionViewCell: UICollectionViewCell {
     
     private lazy var dateLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor(rgb: 0x727272)
         label.font = AppFont.getFont(fontName: .openSans_Regular, size: 13)
         return label
@@ -44,7 +42,6 @@ class MovieItemType1CollectionViewCell: UICollectionViewCell {
     
     private lazy var starImageView: UIImageView = {
         let image = UIImageView()
-        image.translatesAutoresizingMaskIntoConstraints = false
         image.image = AppIcon.image(icon: .star)
         image.contentMode = .scaleAspectFit
         return image
@@ -52,7 +49,6 @@ class MovieItemType1CollectionViewCell: UICollectionViewCell {
     
     private lazy var voteLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = UIColor(rgb: 0x1F1F1F)
         label.font = AppFont.getFont(fontName: .openSans_Bold, size: 13)
         return label
@@ -60,20 +56,17 @@ class MovieItemType1CollectionViewCell: UICollectionViewCell {
     
     private lazy var deleteFavoriteButton: UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(AppIcon.image(icon: .deleteFavorite), for: .normal)
         return button
     }()
     
     private lazy var setFavoriteButton: UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     private lazy var shadowView: UIView = {
         let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = UIColor(rgb: 0xFFFFFF)
         view.layer.shadowColor = UIColor(rgb: 0x000000).cgColor
         view.layer.shadowOpacity = 0.15
@@ -119,61 +112,55 @@ extension MovieItemType1CollectionViewCell: BaseSetupView {
     }
     
     func setupConstraints() {
-        NSLayoutConstraint.activate([
-            self.posterImageView.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: 10),
-            self.posterImageView.leadingAnchor.constraint(equalTo: self.contentView.leadingAnchor, constant: AppSize.Spacing.inset.rawValue),
-            self.posterImageView.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor, constant: -10),
-            self.posterImageView.widthAnchor.constraint(equalTo: self.posterImageView.heightAnchor, multiplier: 2/3)
-        ])
+        self.posterImageView.snp.makeConstraints { make in
+            make.top.bottom.equalToSuperview().inset(10)
+            make.leading.equalToSuperview().offset(AppSize.Spacing.inset.rawValue)
+            make.width.equalTo(self.posterImageView.snp.height).multipliedBy(2.0/3.0)
+        }
         
-        NSLayoutConstraint.activate([
-            self.setFavoriteButton.topAnchor.constraint(equalTo: self.posterImageView.topAnchor, constant: 5),
-            self.setFavoriteButton.leadingAnchor.constraint(equalTo: self.posterImageView.leadingAnchor, constant: 5),
-            self.setFavoriteButton.heightAnchor.constraint(equalToConstant: 32),
-            self.setFavoriteButton.widthAnchor.constraint(equalToConstant: 32)
-        ])
+        self.setFavoriteButton.snp.makeConstraints { make in
+            make.top.leading.equalTo(self.posterImageView).offset(5)
+            make.height.width.equalTo(32)
+        }
         
-        NSLayoutConstraint.activate([
-            self.shadowView.topAnchor.constraint(equalTo: self.posterImageView.topAnchor, constant: 20),
-            self.shadowView.leadingAnchor.constraint(equalTo: self.posterImageView.leadingAnchor),
-            self.shadowView.bottomAnchor.constraint(equalTo: self.posterImageView.bottomAnchor, constant: -20),
-            self.shadowView.trailingAnchor.constraint(equalTo: self.contentView.trailingAnchor, constant: -AppSize.Spacing.inset.rawValue)
-        ])
+        self.shadowView.snp.makeConstraints { make in
+            make.top.bottom.equalTo(self.posterImageView).inset(20)
+            make.leading.equalTo(self.posterImageView)
+            make.trailing.equalToSuperview().inset(AppSize.Spacing.inset.rawValue)
+        }
         
-        NSLayoutConstraint.activate([
-            self.deleteFavoriteButton.topAnchor.constraint(equalTo: self.shadowView.topAnchor, constant: 10),
-            self.deleteFavoriteButton.trailingAnchor.constraint(equalTo: self.shadowView.trailingAnchor, constant: -10),
-            self.deleteFavoriteButton.heightAnchor.constraint(equalToConstant: 32),
-            self.deleteFavoriteButton.widthAnchor.constraint(equalToConstant: 32)
-        ])
+        self.deleteFavoriteButton.snp.makeConstraints { make in
+            make.height.width.equalTo(32)
+            make.top.trailing.equalTo(self.shadowView).inset(10)
+        }
         
-        NSLayoutConstraint.activate([
-            self.nameLabel.topAnchor.constraint(equalTo: self.shadowView.topAnchor, constant: 10),
-            self.nameLabel.leadingAnchor.constraint(equalTo: self.posterImageView.trailingAnchor, constant: 16),
-            self.nameLabel.heightAnchor.constraint(equalToConstant: 42),
-            self.nameLabel.trailingAnchor.constraint(equalTo: self.deleteFavoriteButton.leadingAnchor, constant: -16)
-        ])
+        self.nameLabel.snp.makeConstraints { make in
+            make.top.equalTo(self.shadowView).offset(10)
+            make.leading.equalTo(self.posterImageView.snp.trailing).offset(16)
+            make.height.equalTo(42)
+            make.trailing.equalTo(self.deleteFavoriteButton.snp.leading).offset(-16)
+        }
         
-        NSLayoutConstraint.activate([
-            self.dateLabel.topAnchor.constraint(equalTo: self.nameLabel.bottomAnchor, constant: 5),
-            self.dateLabel.leadingAnchor.constraint(equalTo: self.posterImageView.trailingAnchor, constant: 16),
-            self.dateLabel.heightAnchor.constraint(equalToConstant: 17),
-            self.dateLabel.trailingAnchor.constraint(equalTo: self.shadowView.trailingAnchor, constant: -16)
-        ])
+        self.dateLabel.snp.makeConstraints { make in
+            make.top.equalTo(self.nameLabel.snp.bottom).offset(5)
+            make.leading.equalTo(self.posterImageView.snp.trailing).offset(16)
+            make.height.equalTo(17)
+            make.trailing.equalTo(self.shadowView.snp.trailing).inset(16)
+        }
         
-        NSLayoutConstraint.activate([
-            self.starImageView.topAnchor.constraint(equalTo: self.dateLabel.bottomAnchor, constant: 7),
-            self.starImageView.leadingAnchor.constraint(equalTo: self.posterImageView.trailingAnchor, constant: 16),
-            self.starImageView.heightAnchor.constraint(equalToConstant: 16),
-            self.starImageView.widthAnchor.constraint(equalToConstant: 17)
-        ])
+        self.starImageView.snp.makeConstraints { make in
+            make.top.equalTo(self.dateLabel.snp.bottom).offset(7)
+            make.leading.equalTo(self.posterImageView.snp.trailing).offset(16)
+            make.height.equalTo(16)
+            make.width.equalTo(17)
+        }
         
-        NSLayoutConstraint.activate([
-            self.voteLabel.centerYAnchor.constraint(equalTo: self.starImageView.centerYAnchor),
-            self.voteLabel.leadingAnchor.constraint(equalTo: self.starImageView.trailingAnchor, constant: 7),
-            self.voteLabel.heightAnchor.constraint(equalToConstant: 17),
-            self.voteLabel.trailingAnchor.constraint(equalTo: self.shadowView.trailingAnchor, constant: -16)
-        ])
+        self.voteLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(self.starImageView)
+            make.leading.equalTo(self.starImageView.snp.trailing).offset(7)
+            make.height.equalTo(17)
+            make.trailing.equalTo(self.shadowView).inset(16)
+        }
     }
     
     func binding() {

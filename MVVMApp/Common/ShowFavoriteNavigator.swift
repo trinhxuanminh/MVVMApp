@@ -7,7 +7,7 @@
 
 import Foundation
 import UIKit
-import SwinjectStoryboard
+import Swinject
 
 protocol ShowFavoriteNavigatorProtocol {
     func toFavorite()
@@ -18,6 +18,6 @@ class ShowFavoriteNavigator: ShowFavoriteNavigatorProtocol {
         guard let topVC = UIApplication.topStackViewController() else {
             return
         }
-        topVC.push(to: SwinjectStoryboard.defaultContainer.resolve(FavoriteViewController.self)!, animated: true)
+        topVC.push(to: Assembler.resolve(FavoriteViewController.self), animated: true)
     }
 }
